@@ -63,17 +63,17 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                groupId = 'com.gurpster.Octopus'
+                groupId = 'com.github.williaanlopes'
                 artifactId = 'octopus'
-                version = '1.0'
+                version = '1.0.2'
             }
-            debug(MavenPublication) {
-                from components.debug
-
-                groupId = 'com.gurpster.Octopus'
-                artifactId = 'octopus-debug'
-                version = '1.0'
-            }
+//            debug(MavenPublication) {
+//                from components.debug
+//
+//                groupId = 'com.gurpster.octopus'
+//                artifactId = 'octopus-debug'
+//                version = '1.0'
+//            }
         }
     }
 }
