@@ -33,6 +33,12 @@ android {
         viewBinding true
         dataBinding true
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {
@@ -62,8 +68,13 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.williaanlopes'
                 artifactId = 'octopus'
-                version = '1.0.5'
+                version = '1.0.0'
             }
         }
     }
+//    repositories {
+//        maven {
+//            url "$buildDir/releases"
+//        }
+//    }
 }
