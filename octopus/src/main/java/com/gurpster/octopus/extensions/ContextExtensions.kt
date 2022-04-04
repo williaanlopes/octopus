@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.gurpster.sample.R
+import com.gurpster.octopus.R
 
 fun Context.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 
