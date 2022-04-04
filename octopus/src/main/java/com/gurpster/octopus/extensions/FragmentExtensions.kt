@@ -1,4 +1,4 @@
-package com.gurpster.sample.extensions
+package com.gurpster.octopus.extensions
 
 import android.os.Bundle
 import android.view.View
@@ -9,8 +9,8 @@ import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import com.gurpster.sample.helpers.AutoClearedValue
-import com.gurpster.sample.helpers.FragmentAutoClearedValue
+import com.gurpster.octopus.helpers.AutoClearedValue
+import com.gurpster.octopus.helpers.FragmentAutoClearedValue
 
 fun <T : ViewBinding> Fragment.viewBinding(
     binder: (View) -> T

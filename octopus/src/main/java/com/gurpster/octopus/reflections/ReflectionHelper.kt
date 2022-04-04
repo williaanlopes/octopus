@@ -1,4 +1,4 @@
-package com.gurpster.sample.reflections
+package com.gurpster.octopus.reflections
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

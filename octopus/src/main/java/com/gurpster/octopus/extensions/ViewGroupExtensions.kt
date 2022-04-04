@@ -1,10 +1,10 @@
-package com.gurpster.sample.extensions
+package com.gurpster.octopus.extensions
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.gurpster.sample.reflections.findClass
-import com.gurpster.sample.reflections.getBinding
+import com.gurpster.octopus.reflections.findClass
+import com.gurpster.octopus.reflections.getBinding
 
 inline fun <reified V : ViewBinding> ViewGroup.toBinding(): V {
     return V::class.java.getMethod(

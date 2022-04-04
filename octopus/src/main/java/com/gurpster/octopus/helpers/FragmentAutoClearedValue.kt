@@ -1,4 +1,4 @@
-package com.gurpster.sample.helpers
+package com.gurpster.octopus.helpers
 
 import android.view.View
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.gurpster.sample.extensions
+package com.gurpster.octopus.extensions
 
 import android.annotation.SuppressLint
 import android.content.Context

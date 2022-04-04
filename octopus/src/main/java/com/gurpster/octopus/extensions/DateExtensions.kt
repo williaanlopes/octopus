@@ -1,4 +1,4 @@
-package com.gurpster.sample.extensions
+package com.gurpster.octopus.extensions
 
 import java.text.ParseException
 import java.text.SimpleDateFormat

@@ -1,4 +1,4 @@
-package com.gurpster.sample.helpers
+package com.gurpster.octopus.helpers
 
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
