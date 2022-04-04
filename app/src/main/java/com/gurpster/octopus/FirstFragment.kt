@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.gurpster.octopus.databinding.FragmentFirstBinding
-import com.gurpster.octopus.extensions.navDirections
 import com.gurpster.octopus.extensions.viewBindings
-import com.gurpster.octopus.helpers.TextViewHelper
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
