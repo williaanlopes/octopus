@@ -1,9 +1,6 @@
-package com.gurpster.octopus.extensions
+package com.gurpster.sample.extensions
 
-import android.content.Context
 import android.util.Patterns
-import android.webkit.CookieSyncManager.createInstance
-import com.google.i18n.phonenumbers.PhoneNumberUtil
 import java.io.*
 import kotlin.experimental.and
 

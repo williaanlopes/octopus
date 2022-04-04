@@ -1,4 +1,4 @@
-package com.gurpster.octopus.helpers
+package com.gurpster.sample.helpers
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver

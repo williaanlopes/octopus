@@ -1,11 +1,11 @@
-package com.gurpster.octopus.extensions
+package com.gurpster.sample.extensions
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.gurpster.octopus.reflections.findClass
-import com.gurpster.octopus.reflections.getBinding
+import com.gurpster.sample.reflections.findClass
+import com.gurpster.sample.reflections.getBinding
 
 inline fun <V : ViewBinding> BottomSheetDialogFragment.viewBindings(
     inflater: LayoutInflater,

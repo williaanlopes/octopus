@@ -1,4 +1,4 @@
-package com.gurpster.octopus
+package com.gurpster.sample
 
 import org.junit.Test
 

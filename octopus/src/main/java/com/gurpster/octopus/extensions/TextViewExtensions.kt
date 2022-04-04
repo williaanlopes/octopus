@@ -1,7 +1,7 @@
-package com.gurpster.octopus.extensions
+package com.gurpster.sample.extensions
 
 import android.widget.TextView
-import com.gurpster.octopus.helpers.TextViewHelper
+import com.gurpster.sample.helpers.TextViewHelper
 
 fun TextView.asyncText(text: CharSequence, textSize: Int?) {
     TextViewHelper.asyncText(this, text, textSize)

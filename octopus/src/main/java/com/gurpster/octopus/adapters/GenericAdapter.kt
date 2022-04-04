@@ -1,4 +1,4 @@
-package com.gurpster.octopus
+package com.gurpster.sample.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

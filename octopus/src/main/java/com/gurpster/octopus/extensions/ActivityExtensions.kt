@@ -1,10 +1,10 @@
-package com.gurpster.octopus.extensions
+package com.gurpster.sample.extensions
 
 import android.view.LayoutInflater
 import androidx.activity.ComponentActivity
 import androidx.viewbinding.ViewBinding
-import com.gurpster.octopus.reflections.findClass
-import com.gurpster.octopus.reflections.getBinding
+import com.gurpster.sample.reflections.findClass
+import com.gurpster.sample.reflections.getBinding
 
 // private val binding by viewBinding(ActivityMainBinding::inflate)
 inline fun <T : ViewBinding> ComponentActivity.viewBinding(

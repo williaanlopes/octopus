@@ -1,10 +1,10 @@
-package com.gurpster.octopus.extensions
+package com.gurpster.sample.extensions
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.gurpster.octopus.R
+import com.gurpster.sample.R
 
 fun Context.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 
