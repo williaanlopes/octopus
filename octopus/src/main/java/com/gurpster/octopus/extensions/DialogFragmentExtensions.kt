@@ -7,7 +7,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.gurpster.octopus.reflections.findClass
 import com.gurpster.octopus.reflections.getBinding
 
-inline fun <V : ViewBinding> BottomSheetDialogFragment.viewBindings(
+fun <V : ViewBinding> BottomSheetDialogFragment.viewBindings(
     inflater: LayoutInflater,
     container: ViewGroup?
 ): V {

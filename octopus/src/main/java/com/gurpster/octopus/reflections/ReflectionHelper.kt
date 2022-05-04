@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 
-inline fun <V : ViewBinding> Class<*>.getBinding(layoutInflater: LayoutInflater): V {
+fun <V : ViewBinding> Class<*>.getBinding(layoutInflater: LayoutInflater): V {
     return try {
         @Suppress("UNCHECKED_CAST")
         getMethod(
@@ -17,7 +17,7 @@ inline fun <V : ViewBinding> Class<*>.getBinding(layoutInflater: LayoutInflater)
     }
 }
 
-inline fun <V : ViewBinding> Class<*>.getBinding(
+fun <V : ViewBinding> Class<*>.getBinding(
     layoutInflater: LayoutInflater,
     container: ViewGroup?
 ): V {
@@ -34,7 +34,7 @@ inline fun <V : ViewBinding> Class<*>.getBinding(
     }
 }
 
-inline fun Class<*>.checkMethod(): Boolean {
+fun Class<*>.checkMethod(): Boolean {
     return try {
         getMethod(
             "inflate",
@@ -46,7 +46,7 @@ inline fun Class<*>.checkMethod(): Boolean {
     }
 }
 
-inline fun Any.findClass(): Class<*> {
+fun Any.findClass(): Class<*> {
     var javaClass: Class<*> = this.javaClass
     var result: Class<*>? = null
     while (result == null || !result.checkMethod()) {
