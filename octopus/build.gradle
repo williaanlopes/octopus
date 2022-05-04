@@ -72,9 +72,4 @@ afterEvaluate {
             }
         }
     }
-//    repositories {
-//        maven {
-//            url "$buildDir/releases"
-//        }
-//    }
 }

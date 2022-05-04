@@ -2,6 +2,7 @@ package com.gurpster.octopus.extensions
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
@@ -48,3 +49,12 @@ fun Fragment.popBackStack() = findNavController().popBackStack()
 
 fun Fragment.getParentFragmentType(): Fragment =
     requireParentFragment().childFragmentManager.fragments[0]
+
+fun Fragment.shortToast(text: String) =
+    Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
+
+fun Fragment.longToast(text: String) =
+    Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
+
+fun Fragment.toast(text: String, length: Int) =
+    Toast.makeText(requireContext(), text, length).show()
