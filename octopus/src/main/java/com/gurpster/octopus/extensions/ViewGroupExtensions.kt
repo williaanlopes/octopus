@@ -16,7 +16,7 @@ inline fun <reified V : ViewBinding> ViewGroup.toBinding(): V {
 
 }
 
-inline fun <V : ViewBinding> ViewGroup.viewBindings(
+fun <V : ViewBinding> ViewGroup.viewBindings(
     inflater: LayoutInflater,
     container: ViewGroup?
 ): V {

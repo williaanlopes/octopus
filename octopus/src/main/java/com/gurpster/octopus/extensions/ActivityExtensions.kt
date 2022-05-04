@@ -16,7 +16,7 @@ inline fun <T : ViewBinding> ComponentActivity.viewBinding(
 }
 
 fun <T : ViewBinding> ComponentActivity.viewBindings() = lazy(LazyThreadSafetyMode.NONE) {
-    this.findClass().getBinding<T>(layoutInflater)
+    findClass().getBinding<T>(layoutInflater)
 }
 
 // val firstName by bundleArgs<String>("firstName") // String?

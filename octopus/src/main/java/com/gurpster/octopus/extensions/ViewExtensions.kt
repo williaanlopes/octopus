@@ -6,7 +6,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.android.material.snackbar.Snackbar
 
-inline fun View.toggleVisibility() {
+fun View.toggleVisibility() {
     when (this.visibility) {
         View.VISIBLE -> this.visibility = View.GONE
         View.INVISIBLE,
@@ -14,13 +14,13 @@ inline fun View.toggleVisibility() {
     }
 }
 
-inline fun View.show(boolean: Boolean) {
+fun View.show(boolean: Boolean) {
     if (boolean) this.visibility = View.VISIBLE
     else this.visibility = View.GONE
 }
 
-inline fun View.showIfHaveText(text: String) {
-    if (!text.isNullOrBlank()) this.visibility = View.VISIBLE
+fun View.showIfHaveText(text: String) {
+    if (text.isNotBlank()) this.visibility = View.VISIBLE
     else this.visibility = View.GONE
 }
 

@@ -54,8 +54,8 @@ fun String.isValidUrl(): Boolean =
 private fun encodeBytes(bytes: ByteArray): String {
     val strBuf = StringBuffer()
     for (i in bytes.indices) {
-        strBuf.append(((bytes[i].toInt() shr 4 and 0xF) + 'a'.toInt()).toChar())
-        strBuf.append(((bytes[i] and 0xF) + 'a'.toInt()).toChar())
+        strBuf.append(((bytes[i].toInt() shr 4 and 0xF) + 'a'.code).toChar())
+        strBuf.append(((bytes[i] and 0xF) + 'a'.code).toChar())
     }
     return strBuf.toString()
 }
