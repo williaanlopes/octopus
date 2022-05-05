@@ -3,7 +3,6 @@ package com.gurpster.octopus.reflections
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import java.lang.reflect.ParameterizedType
 
 fun <V : ViewBinding> Class<*>.getBinding(layoutInflater: LayoutInflater): V {
     return try {
@@ -47,6 +46,24 @@ fun Class<*>.checkMethod(): Boolean {
 }
 
 fun Any.findClass(): Class<*> {
+    val javaClass: Class<*> = this.javaClass
+    var result: Class<*>? = null
+
+    javaClass.`package`?.let { classPackage ->
+
+        val className = javaClass
+            .simpleName
+            .split(Regex("(?=\\p{Lu})"))
+            .reversed()
+            .joinToString("")
+
+        result = Class.forName("${classPackage.name}.databinding.${className}Binding")
+    }
+
+    return result as Class<*>
+}
+
+/*fun Any.findClass(): Class<*> {
     var javaClass: Class<*> = this.javaClass
     var result: Class<*>? = null
     while (result == null || !result.checkMethod()) {
@@ -61,4 +78,4 @@ fun Any.findClass(): Class<*> {
         javaClass = javaClass.superclass
     }
     return result
-}
+}*/
