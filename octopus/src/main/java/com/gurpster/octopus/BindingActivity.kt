@@ -5,6 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.gurpster.octopus.reflections.getBinding
 
+/**
+ * Binding activity
+ *
+ * Ex: MainActivity : BindingActivity<ActivityMainBinding>()
+ *
+ * @param V
+ * @constructor Create empty Binding activity
+ */
 open class BindingActivity<V : ViewBinding> : AppCompatActivity() {
 
     open lateinit var binding: V
