@@ -8,6 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.gurpster.octopus.reflections.getBinding
 
+
+/**
+ * Binding fragment
+ *
+ * Ex: HomeFragment : BindingFragment<FragmentHomeBinding>()
+ *
+ * @param V
+ * @constructor Create empty Binding fragment
+ */
 open class BindingFragment<V : ViewBinding> : Fragment() {
 
     private var _binding: V? = null
