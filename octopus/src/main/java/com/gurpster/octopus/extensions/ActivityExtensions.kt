@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.gurpster.octopus.reflections.findClass
 import com.gurpster.octopus.reflections.getBinding
@@ -15,6 +14,10 @@ inline fun <T : ViewBinding> AppCompatActivity.viewBinding(
 ) = lazy(LazyThreadSafetyMode.NONE) {
     bindingInflater.invoke(layoutInflater)
 }
+
+//fun <V : ViewBinding> AppCompatActivity<V>.viewBindings(): V {
+//    return findClass().getBinding(layoutInflater)
+//}
 
 fun <T : ViewBinding> AppCompatActivity.viewBindings() = lazy(LazyThreadSafetyMode.NONE) {
     findClass().getBinding<T>(layoutInflater)

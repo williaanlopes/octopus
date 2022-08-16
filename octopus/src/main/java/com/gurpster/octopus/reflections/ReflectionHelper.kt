@@ -3,6 +3,14 @@ package com.gurpster.octopus.reflections
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
+import com.gurpster.octopus.BindingActivity
+import com.gurpster.octopus.BindingBottomSheetDialogFragment
+import com.gurpster.octopus.BindingFragment
+import java.io.File
+import java.io.IOException
+import java.lang.reflect.ParameterizedType
+import java.net.URL
+
 
 fun <V : ViewBinding> Class<*>.getBinding(layoutInflater: LayoutInflater): V {
     return try {
@@ -46,6 +54,41 @@ fun Class<*>.checkMethod(): Boolean {
 }
 
 fun Any.findClass(): Class<*> {
+    var javaClass: Class<*> = this.javaClass
+    var result: Class<*>? = null
+    while (result == null || !result.checkMethod()) {
+        result = (javaClass.genericSuperclass as? ParameterizedType)
+            ?.actualTypeArguments?.firstOrNull {
+                if (it is Class<*>) {
+                    it.checkMethod()
+                } else {
+                    false
+                }
+            } as? Class<*>
+        javaClass = javaClass.superclass
+    }
+    return result
+}
+
+internal fun <V : ViewBinding> BindingActivity<V>.getBinding(): V {
+    return findClass().getBinding(layoutInflater)
+}
+
+internal fun <V : ViewBinding> BindingFragment<V>.getBinding(
+    inflater: LayoutInflater,
+    container: ViewGroup?
+): V {
+    return findClass().getBinding(inflater, container)
+}
+
+internal fun <V : ViewBinding> BindingBottomSheetDialogFragment<V>.getBinding(
+    inflater: LayoutInflater,
+    container: ViewGroup?
+): V {
+    return findClass().getBinding(inflater, container)
+}
+
+/*fun Any.findClass(): Class<*> {
     val javaClass: Class<*> = this.javaClass
     var result: Class<*>? = null
 
@@ -61,21 +104,5 @@ fun Any.findClass(): Class<*> {
     }
 
     return result as Class<*>
-}
-
-/*fun Any.findClass(): Class<*> {
-    var javaClass: Class<*> = this.javaClass
-    var result: Class<*>? = null
-    while (result == null || !result.checkMethod()) {
-        result = (javaClass.genericSuperclass as? ParameterizedType)
-            ?.actualTypeArguments?.firstOrNull {
-                if (it is Class<*>) {
-                    it.checkMethod()
-                } else {
-                    false
-                }
-            } as? Class<*>
-        javaClass = javaClass.superclass
-    }
-    return result
 }*/
+

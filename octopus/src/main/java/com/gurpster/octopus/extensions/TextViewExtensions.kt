@@ -4,9 +4,15 @@ import android.widget.TextView
 import com.gurpster.octopus.helpers.TextViewHelper
 
 fun TextView.asyncText(text: CharSequence, textSize: Int?) {
-    TextViewHelper.asyncText(this, text, textSize)
+    async(this, text, textSize)
 }
 
 fun TextView.asyncText(text: CharSequence) {
-    TextViewHelper.asyncText(this, text, null)
+    async(this, text, null)
+}
+
+fun TextView.getString() = text.toString()
+
+private fun async(view: TextView, text: CharSequence, textSize: Int?) {
+    TextViewHelper.asyncText(view, text, textSize)
 }

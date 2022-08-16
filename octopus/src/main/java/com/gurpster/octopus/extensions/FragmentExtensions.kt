@@ -10,14 +10,14 @@ import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import com.gurpster.octopus.helpers.AutoClearedValue
 import com.gurpster.octopus.helpers.FragmentAutoClearedValue
+import com.gurpster.octopus.helpers.autoCleared
 
 fun <T : ViewBinding> Fragment.viewBinding(
     binder: (View) -> T
 ) = FragmentAutoClearedValue(binder)
 
-fun <T : ViewBinding> Fragment.viewBindings() = AutoClearedValue<T>(this)
+fun <T : ViewBinding> Fragment.viewBindings() = autoCleared<T>()
 
 // val firstName by bundleArgs<String>("firstName") // String?
 inline fun <reified T : Any> Fragment.bundleArgs(lable: String, defaultvalue: T? = null) = lazy {
@@ -36,7 +36,7 @@ fun Fragment.navigate(@IdRes redId: Int) {
 fun Fragment.navigate(@IdRes resId: Int, args: Bundle? = null, navOptions: NavOptions? = null) =
     findNavController().navigate(resId, args, navOptions)
 
-inline fun <F : Fragment, reified V : Any> F.navDirections() = AutoClearedValue<V>(this)
+inline fun <F : Fragment, reified V : Any> F.navDirections() = autoCleared<V>()
 //inline fun <F : Fragment, reified V : Any> F.navDirections() = inject<V> {
 //    parametersOf(this)
 //}
