@@ -1,8 +1,10 @@
 package com.gurpster.octopus.extensions
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.annotation.IdRes
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
@@ -58,3 +60,12 @@ fun Fragment.longToast(text: String) =
 
 fun Fragment.toast(text: String, length: Int) =
     Toast.makeText(requireContext(), text, length).show()
+
+fun Fragment.isAppInstalled(packageName: String): Boolean {
+    return try {
+        requireContext().packageManager.getApplicationInfo(packageName, 0)
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        false
+    }
+}

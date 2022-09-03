@@ -1,11 +1,13 @@
 package com.gurpster.octopus.extensions
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.os.Build
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import com.gurpster.octopus.R
 
 
@@ -112,5 +114,20 @@ fun Context.internetType(): NetworkConnectivityType {
 
 fun Context?.globalInternetFailBock(){
     // show alter to user or implement custom code here
+}
+
+/**
+ * Is app installed check if some app is installed
+ * search by package name
+ * @param packageName
+ * @return true|false
+ */
+fun Context.isAppInstalled(packageName: String): Boolean {
+    return try {
+        packageManager.getApplicationInfo(packageName, 0)
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        false
+    }
 }
 
