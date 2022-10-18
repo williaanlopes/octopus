@@ -69,3 +69,8 @@ fun View.showKeyboard() {
     this.requestFocus()
     imm.showSoftInput(this, 0)
 }
+
+fun View.invisible(boolean: Boolean) {
+    if (boolean) this.visibility = View.INVISIBLE
+    else this.visibility = View.VISIBLE
+}

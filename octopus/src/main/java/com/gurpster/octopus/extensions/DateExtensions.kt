@@ -1,42 +1,32 @@
 package com.gurpster.octopus.extensions
 
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-private const val TIME_STAMP_FORMAT = "EEEE, MMMM d, yyyy - hh:mm:ss a"
-private const val DATE_FORMAT = "yyyy-MM-dd"
-private const val TIME_FORMAT = "hh:mm:ss"
-
-fun Long.getTimeStamp(): String {
-    val date = Date(this)
-    val simpleDateFormat = SimpleDateFormat(TIME_STAMP_FORMAT, Locale.getDefault())
-    simpleDateFormat.timeZone = TimeZone.getDefault()
-    return simpleDateFormat.format(date)
+fun Date.getFormat(format: String): String {
+    val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+    return dateFormat.format(Date())
 }
 
-fun Long.getYearMonthDay(): String {
-    val date = Date(this)
-    val simpleDateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
-    simpleDateFormat.timeZone = TimeZone.getDefault()
-    return simpleDateFormat.format(date)
-}
+val Date.getDataBaseTimeStamp: String
+    get() = getFormat(DATE_FORMAT_DATABASE)
 
-fun Long.getHour(): String {
-    val date = Date(this)
-    val simpleDateFormat = SimpleDateFormat(TIME_FORMAT, Locale.getDefault())
-    simpleDateFormat.timeZone = TimeZone.getDefault()
-    return simpleDateFormat.format(date)
-}
-
-@Throws(ParseException::class)
-fun String.getDateUnixTime(): Long {
-    try {
-        val simpleDateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
-        simpleDateFormat.timeZone = TimeZone.getDefault()
-        return simpleDateFormat.parse(this)!!.time
-    } catch (e: ParseException) {
-        e.printStackTrace()
-    }
-    throw ParseException("Please Enter a valid date", 0)
+/**
+ * Returns a String as an Date with format
+ *
+ * <pre>
+ * {@code
+ * val format = "yyyy-MM-dd HH:mm:ss"
+ * val date = Date()
+ * val str = date.toString(format)
+ * val date2 = str.toDate(format)
+ * }
+ * </pre>
+ *
+ * @param  format the string date format
+ * @return Date as String
+ */
+fun Date.toString(format: String): String {
+    val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
+    return dateFormatter.format(this)
 }

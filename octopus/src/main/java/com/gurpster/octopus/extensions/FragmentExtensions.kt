@@ -1,6 +1,9 @@
 package com.gurpster.octopus.extensions
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -61,11 +64,33 @@ fun Fragment.longToast(text: String) =
 fun Fragment.toast(text: String, length: Int) =
     Toast.makeText(requireContext(), text, length).show()
 
-fun Fragment.isAppInstalled(packageName: String): Boolean {
-    return try {
-        requireContext().packageManager.getApplicationInfo(packageName, 0)
-        true
-    } catch (e: PackageManager.NameNotFoundException) {
-        false
+fun Fragment.isAppInstalled(packageName: String): Boolean = requireContext().isAppInstalled(packageName)
+
+fun Fragment.installApp(packageName: String) {
+    try {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=$packageName")
+            )
+        )
+    } catch (e: ActivityNotFoundException) {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+            )
+        )
+    }
+}
+
+fun Fragment.openApp(packageName: String, shouldInstall: Boolean = false) {
+    val launchIntent = requireContext().packageManager
+        .getLaunchIntentForPackage("com.package.address")
+
+    if (launchIntent != null) {
+        startActivity(launchIntent) //null pointer check in case package name was not found
+    } else if (shouldInstall) {
+        installApp(packageName)
     }
 }

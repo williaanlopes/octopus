@@ -1,32 +1,27 @@
 package com.gurpster.octopus.extensions
 
+import android.app.NotificationManager
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Point
+import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
+import android.net.Uri
 import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.provider.Settings
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import com.gurpster.octopus.R
-
-
-fun Context.showAlertDialog(
-    positiveButtonLable: String = getString(R.string.okay),
-    title: String = getString(R.string.app_name), message: String,
-    actionOnPositveButton: () -> Unit
-) {
-    val builder = AlertDialog.Builder(this)
-        .setTitle(title)
-        .setMessage(message)
-        .setCancelable(false)
-        .setPositiveButton(positiveButtonLable) { dialog, _ ->
-            dialog.cancel()
-            actionOnPositveButton()
-        }
-    val alert = builder.create()
-    alert.show()
-}
+import java.util.*
 
 /**
  * isOnline{ // Do you work when connected with internet }
@@ -129,5 +124,102 @@ fun Context.isAppInstalled(packageName: String): Boolean {
     } catch (e: PackageManager.NameNotFoundException) {
         false
     }
+}
+
+fun Context.isDevMode(): Boolean {
+    return when {
+        Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN -> {
+            Settings.Secure.getInt(contentResolver,
+                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
+        }
+        Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN -> {
+            @Suppress("DEPRECATION")
+            Settings.Secure.getInt(contentResolver,
+                Settings.Secure.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
+        }
+        else -> false
+    }
+}
+
+/**
+ * Screen size
+ *
+ * <pre>
+ * {@code
+ * Log.d(TAG, "User's screen size: ${screenSize.x}x${screenSize.y}")
+ * }
+ * </pre>
+ */
+val Context.screenSize: Point
+    get() {
+        val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        return size
+    }
+
+fun Context.directionsTo(location: Location) {
+    val lat = location.latitude
+    val lng = location.longitude
+    val uri = String.format(Locale.US, "http://maps.google.com/maps?daddr=%f,%f", lat, lng)
+    try {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        intent.setClassName(
+            "com.google.android.apps.maps",
+            "com.google.android.maps.MapsActivity"
+        )
+        startActivity(intent)
+    } catch (e: ActivityNotFoundException) {
+        e.printStackTrace()
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        startActivity(intent)
+    }
+}
+
+/**
+ * Vibrate
+ * </br>
+ * <b>Need to use
+ * <pre><uses-permission android:name="android.permission.VIBRATE" /></pre></b> permission</pre>
+ * <pre>
+ * {@code
+ * context.vibrate(500) // 500 ms
+ * }
+ * </pre>
+ * @param duration
+ */
+fun Context.vibrate(duration: Long) {
+    val vib = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        vib.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE))
+    } else {
+        @Suppress("DEPRECATION")
+        vib.vibrate(duration)
+    }
+}
+
+fun Context.showNotificationOngoing(id: Int = 0, channelName: String, title: String, contentText: String, smallIcon: Int) {
+
+    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+//    val contentIntent = PendingIntent.getActivity(
+//        context, 0,
+//        Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT
+//    )
+
+    val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(
+        this,
+        channelName
+    )
+        .setContentTitle(title)
+        .setContentText(contentText)
+        .setSmallIcon(smallIcon)
+//        .setContentIntent(contentIntent)
+        .setOngoing(true)
+//        .setStyle(BigTextStyle().bigText(addressFragments.toString()))
+        .setAutoCancel(true)
+    notificationManager.notify(id, notificationBuilder.build())
 }
 

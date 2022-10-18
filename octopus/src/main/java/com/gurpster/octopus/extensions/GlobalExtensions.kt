@@ -1,17 +1,10 @@
 package com.gurpster.octopus.extensions
 
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import android.provider.Settings
-import android.view.LayoutInflater
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.viewbinding.ViewBinding
-import com.gurpster.octopus.reflections.findClass
-import com.gurpster.octopus.reflections.getBinding
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Environment
+import androidx.core.content.FileProvider
 import java.io.File
 
 private fun findBinary(binaryName: String = "su"): Boolean {
@@ -36,18 +29,37 @@ fun isRooted(): Boolean {
     return findBinary()
 }
 
-fun isDevMode(context: Context): Boolean {
-    return when {
-        Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN -> {
-            Settings.Secure.getInt(context.contentResolver,
-                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
-        }
-        Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN -> {
-            @Suppress("DEPRECATION")
-            Settings.Secure.getInt(context.contentResolver,
-                Settings.Secure.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
-        }
-        else -> false
-    }
+fun getRandomFilepath(
+    context: Context,
+    extension: String,
+    directory: String = Environment.DIRECTORY_PICTURES
+): String {
+    return "${context.getExternalFilesDir(directory)?.absolutePath}/${System.currentTimeMillis()}.$extension"
 }
+
+fun getUriFromPath(context: Context, fileProvider: String, path: String): Uri {
+    return FileProvider.getUriForFile(
+        context,
+        fileProvider,//"${BuildConfig.APPLICATION_ID}.fileprovider",
+        File(path)
+    )
+}
+
+fun getRandomUri(
+    context: Context,
+    fileProvider: String,
+    extension: String = "jpeg",
+    directory: String = Environment.DIRECTORY_PICTURES
+): Uri {
+    return getUriFromPath(context, fileProvider, getRandomFilepath(context, extension, directory))
+}
+
+fun scaleDown(realImage: Bitmap, maxImageSize: Float, filter: Boolean): Bitmap? {
+    val ratio = Math.min(maxImageSize / realImage.width, maxImageSize / realImage.height)
+    val width = Math.round(ratio * realImage.width)
+    val height = Math.round(ratio * realImage.height)
+    return Bitmap.createScaledBitmap(realImage, width, height, filter)
+}
+
+fun Any.emptyString() = String()
 

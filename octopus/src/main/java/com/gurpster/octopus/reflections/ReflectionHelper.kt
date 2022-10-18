@@ -6,10 +6,9 @@ import androidx.viewbinding.ViewBinding
 import com.gurpster.octopus.BindingActivity
 import com.gurpster.octopus.BindingBottomSheetDialogFragment
 import com.gurpster.octopus.BindingFragment
-import java.io.File
-import java.io.IOException
 import java.lang.reflect.ParameterizedType
-import java.net.URL
+import java.lang.reflect.Type
+import kotlin.reflect.full.declaredMemberProperties
 
 
 fun <V : ViewBinding> Class<*>.getBinding(layoutInflater: LayoutInflater): V {
@@ -105,4 +104,31 @@ internal fun <V : ViewBinding> BindingBottomSheetDialogFragment<V>.getBinding(
 
     return result as Class<*>
 }*/
+
+data class Test(
+    val name: String,
+    val list: List<String>
+)
+
+inline fun <reified T> containsPropertyList(): Boolean {
+    return T::class.java.declaredFields.any {
+        (it.type.canonicalName!! == ArrayList::class.java.canonicalName)
+                || (it.type.canonicalName!! == List::class.java.canonicalName)
+    }
+}
+
+fun main(args: Array<String>) {
+//    Test::class.java.declaredFields.forEach {
+//        println(containsPropertyList<Test>())
+//    }
+
+    if (containsPropertyList<Test>()) {
+        Test::class.declaredMemberProperties.forEach {
+            if ((it.javaClass.canonicalName!! == ArrayList::class.java.canonicalName)
+                || (it.javaClass.canonicalName!! == List::class.java.canonicalName)) {
+
+            }
+        }
+    }
+}
 
