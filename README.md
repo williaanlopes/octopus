@@ -1,5 +1,15 @@
 # octopus [![](https://jitpack.io/v/williaanlopes/octopus.svg)](https://jitpack.io/#williaanlopes/octopus)
 
 ```
-implementation 'com.github.williaanlopes:octopus:1.0.6'
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+```
+dependencies {
+    implementation 'com.github.williaanlopes:octopus:latest'
+}
 ```
