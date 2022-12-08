@@ -8,6 +8,7 @@ import android.util.Base64.encode
 import android.util.Patterns
 import android.webkit.URLUtil
 import androidx.core.text.HtmlCompat
+import com.gurpster.octopus.DATE_FORMAT
 import java.io.*
 import java.security.MessageDigest
 import java.text.DecimalFormat

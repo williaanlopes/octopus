@@ -2,14 +2,11 @@ package com.gurpster.octopus.extensions
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.annotation.IdRes
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
@@ -19,18 +16,19 @@ import com.gurpster.octopus.helpers.FragmentAutoClearedValue
 import com.gurpster.octopus.helpers.autoCleared
 
 fun <T : ViewBinding> Fragment.viewBinding(
-    binder: (View) -> T
+    binder: (View) -> T,
 ) = FragmentAutoClearedValue(binder)
 
 fun <T : ViewBinding> Fragment.viewBindings() = autoCleared<T>()
 
 // val firstName by bundleArgs<String>("firstName") // String?
-inline fun <reified T : Any> Fragment.bundleArgs(lable: String, defaultvalue: T? = null) = lazy {
-    val value = arguments?.get(lable)
-    if (value is T) value else defaultvalue
+@Suppress("DEPRECATION")
+inline fun <reified T : Any> Fragment.bundleArgs(key: String, defaultValue: T? = null) = lazy {
+    val value = arguments?.get(key)
+    if (value is T) value else defaultValue
 }
 
-fun Fragment.navigate(@NonNull directions: NavDirections) {
+fun Fragment.navigate(directions: NavDirections) {
     findNavController().navigate(directions)
 }
 
@@ -64,7 +62,8 @@ fun Fragment.longToast(text: String) =
 fun Fragment.toast(text: String, length: Int) =
     Toast.makeText(requireContext(), text, length).show()
 
-fun Fragment.isAppInstalled(packageName: String): Boolean = requireContext().isAppInstalled(packageName)
+fun Fragment.isAppInstalled(packageName: String): Boolean =
+    requireContext().isAppInstalled(packageName)
 
 fun Fragment.installApp(packageName: String) {
     try {

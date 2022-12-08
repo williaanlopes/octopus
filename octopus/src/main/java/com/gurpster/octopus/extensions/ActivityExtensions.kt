@@ -3,38 +3,15 @@ package com.gurpster.octopus.extensions
 import android.content.ActivityNotFoundException
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.viewbinding.ViewBinding
-import com.gurpster.octopus.reflections.findClass
-import com.gurpster.octopus.reflections.getBinding
 
-
-// private val binding by viewBinding(ActivityMainBinding::inflate)
-//inline fun <T : ViewBinding> AppCompatActivity.viewBinding(
-//    crossinline bindingInflater: (LayoutInflater) -> T
-//) = lazy(LazyThreadSafetyMode.NONE) {
-//    bindingInflater.invoke(layoutInflater)
-//}
-
-//fun <V : ViewBinding> AppCompatActivity<V>.viewBindings(): V {
-//    return findClass().getBinding(layoutInflater)
-//}
-
-//fun <T : ViewBinding> AppCompatActivity.viewBindings() = lazy(LazyThreadSafetyMode.NONE) {
-//    findClass().getBinding<T>(layoutInflater)
-//}
-
-// val firstName by bundleArgs<String>("firstName") // String?
 inline fun <reified T : Any> ComponentActivity.bundleArgs(lable: String, defaultvalue: T? = null) =
     lazy {
         val value = intent?.extras?.get(lable)
