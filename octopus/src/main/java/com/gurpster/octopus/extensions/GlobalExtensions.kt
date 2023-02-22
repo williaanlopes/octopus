@@ -9,17 +9,15 @@ import java.io.File
 
 private fun findBinary(binaryName: String = "su"): Boolean {
     var found = false
-    if (!found) {
-        val places = arrayOf(
-            "/sbin/", "/system/bin/", "/system/xbin/",
-            "/data/local/xbin/", "/data/local/bin/",
-            "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"
-        )
-        for (where in places) {
-            if (File(where + binaryName).exists()) {
-                found = true
-                break
-            }
+    val places = arrayOf(
+        "/sbin/", "/system/bin/", "/system/xbin/",
+        "/data/local/xbin/", "/data/local/bin/",
+        "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"
+    )
+    for (where in places) {
+        if (File(where + binaryName).exists()) {
+            found = true
+            break
         }
     }
     return found
@@ -32,7 +30,7 @@ fun isRooted(): Boolean {
 fun getRandomFilepath(
     context: Context,
     extension: String,
-    directory: String = Environment.DIRECTORY_PICTURES
+    directory: String = Environment.DIRECTORY_PICTURES,
 ): String {
     return "${context.getExternalFilesDir(directory)?.absolutePath}/${System.currentTimeMillis()}.$extension"
 }
@@ -49,7 +47,7 @@ fun getRandomUri(
     context: Context,
     fileProvider: String,
     extension: String = "jpeg",
-    directory: String = Environment.DIRECTORY_PICTURES
+    directory: String = Environment.DIRECTORY_PICTURES,
 ): Uri {
     return getUriFromPath(context, fileProvider, getRandomFilepath(context, extension, directory))
 }

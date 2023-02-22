@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 
+@Suppress("DEPRECATION")
 inline fun <reified T : Any> ComponentActivity.bundleArgs(lable: String, defaultvalue: T? = null) =
     lazy {
         val value = intent?.extras?.get(lable)

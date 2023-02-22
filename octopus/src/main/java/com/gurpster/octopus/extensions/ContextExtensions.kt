@@ -17,22 +17,19 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
 import android.view.WindowManager
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
-import androidx.fragment.app.Fragment
-import com.gurpster.octopus.R
 import java.util.*
 
 /**
  * isOnline{ // Do you work when connected with internet }
- + if you want to execute some code when there is no internet you can pass it as first lambda
-    isOnline({
-        // Ofline
-    }) {
-        // Online
-    }
-*/
-fun Context?.hasInternetConnection(failBlock : () -> Unit  = { globalInternetFailBock() }, successBlock : () -> Unit ) {
++ if you want to execute some code when there is no internet you can pass it as first lambda
+isOnline({
+// Ofline
+}) {
+// Online
+}
+ */
+fun Context?.hasInternetConnection(failBlock: () -> Unit = { }, successBlock: () -> Unit = { }) {
     this?.apply {
 //        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 //        val netInfo = cm.activeNetworkInfo
@@ -73,7 +70,7 @@ fun Context?.hasInternetConnection(failBlock : () -> Unit  = { globalInternetFai
         val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
 
 
-    }?:failBlock()
+    } ?: failBlock()
 }
 
 enum class NetworkConnectivityType {
@@ -107,7 +104,7 @@ fun Context.internetType(): NetworkConnectivityType {
     }
 }
 
-fun Context?.globalInternetFailBock(){
+fun Context?.globalInternetFailBock() {
     // show alter to user or implement custom code here
 }
 
@@ -200,7 +197,13 @@ fun Context.vibrate(duration: Long) {
     }
 }
 
-fun Context.showNotificationOngoing(id: Int = 0, channelName: String, title: String, contentText: String, smallIcon: Int) {
+fun Context.showNotificationOngoing(
+    id: Int = 0,
+    channelName: String,
+    title: String,
+    contentText: String,
+    smallIcon: Int,
+) {
 
     val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
