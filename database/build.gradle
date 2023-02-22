@@ -9,7 +9,6 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.gurpster.database"
         minSdk 19
         targetSdk 33
         versionCode 1
