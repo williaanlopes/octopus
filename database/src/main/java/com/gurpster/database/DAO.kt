@@ -5,7 +5,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import kotlin.reflect.full.createInstance
 
-interface Database<T> {
+interface DAO<T> {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(entity: T): Long
@@ -53,26 +53,26 @@ interface Database<T> {
 
 }
 
-suspend inline fun <reified T : Any> Database<T>.listAll(): List<T> = nativeQuery(
+suspend inline fun <reified T : Any> DAO<T>.listAll(): List<T> = nativeQuery(
     "SELECT * FROM `${T::class.java.simpleName.lowercase()}`"
 ).ifEmpty { arrayListOf() }
 
-suspend inline fun <reified T : Any> Database<T>.listAllById(id: Long): List<T> = nativeQuery(
+suspend inline fun <reified T : Any> DAO<T>.listAllById(id: Long): List<T> = nativeQuery(
     "SELECT * FROM `${T::class.java.simpleName.lowercase()}` WHERE id = ?", id
 ).ifEmpty { arrayListOf() }
 
-suspend inline fun <reified T : Any> Database<T>.single(id: Long): T = nativeQuery(
+suspend inline fun <reified T : Any> DAO<T>.single(id: Long): T = nativeQuery(
     "SELECT * FROM `${T::class.java.simpleName.lowercase()}` WHERE id = ? ORDER BY 'DESC' LIMIT 1",
     id
 ).getOrElse(0) { T::class.createInstance() }
 
-suspend inline fun <reified T : Any> Database<T>.deleteAll() {
+suspend inline fun <reified T : Any> DAO<T>.deleteAll() {
     nativeQuery(
         "DELETE FROM `${T::class.java.simpleName.lowercase()}`"
     )
 }
 
-suspend inline fun <reified T : Any> Database<T>.truncate() {
+suspend inline fun <reified T : Any> DAO<T>.truncate() {
     nativeQuery(
         "TRUNCATE TABLE `${T::class.java.simpleName.lowercase()}`"
     )
