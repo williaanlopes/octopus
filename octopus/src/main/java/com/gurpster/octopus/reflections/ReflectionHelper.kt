@@ -7,8 +7,6 @@ import com.gurpster.octopus.BindingActivity
 import com.gurpster.octopus.BindingBottomSheetDialogFragment
 import com.gurpster.octopus.BindingFragment
 import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
-import kotlin.reflect.full.declaredMemberProperties
 
 
 fun <V : ViewBinding> Class<*>.getBinding(layoutInflater: LayoutInflater): V {
@@ -85,50 +83,5 @@ internal fun <V : ViewBinding> BindingBottomSheetDialogFragment<V>.getBinding(
     container: ViewGroup?
 ): V {
     return findClass().getBinding(inflater, container)
-}
-
-/*fun Any.findClass(): Class<*> {
-    val javaClass: Class<*> = this.javaClass
-    var result: Class<*>? = null
-
-    javaClass.`package`?.let { classPackage ->
-
-        val className = javaClass
-            .simpleName
-            .split(Regex("(?=\\p{Lu})"))
-            .reversed()
-            .joinToString("")
-
-        result = Class.forName("${classPackage.name}.databinding.${className}Binding")
-    }
-
-    return result as Class<*>
-}*/
-
-data class Test(
-    val name: String,
-    val list: List<String>
-)
-
-inline fun <reified T> containsPropertyList(): Boolean {
-    return T::class.java.declaredFields.any {
-        (it.type.canonicalName!! == ArrayList::class.java.canonicalName)
-                || (it.type.canonicalName!! == List::class.java.canonicalName)
-    }
-}
-
-fun main(args: Array<String>) {
-//    Test::class.java.declaredFields.forEach {
-//        println(containsPropertyList<Test>())
-//    }
-
-    if (containsPropertyList<Test>()) {
-        Test::class.declaredMemberProperties.forEach {
-            if ((it.javaClass.canonicalName!! == ArrayList::class.java.canonicalName)
-                || (it.javaClass.canonicalName!! == List::class.java.canonicalName)) {
-
-            }
-        }
-    }
 }
 
