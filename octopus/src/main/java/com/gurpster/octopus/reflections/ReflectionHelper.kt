@@ -8,7 +8,6 @@ import com.gurpster.octopus.BindingBottomSheetDialogFragment
 import com.gurpster.octopus.BindingFragment
 import java.lang.reflect.ParameterizedType
 
-
 fun <V : ViewBinding> Class<*>.getBinding(layoutInflater: LayoutInflater): V {
     return try {
         @Suppress("UNCHECKED_CAST")
