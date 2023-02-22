@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+    namespace 'com.gurpster.sample'
+
     compileSdk 33
 
     defaultConfig {
@@ -33,12 +35,12 @@ android {
     buildFeatures {
         viewBinding true
     }
-    namespace 'com.gurpster.sample'
 }
 
 dependencies {
 
     implementation project(':octopus')
+    implementation project(':database')
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
