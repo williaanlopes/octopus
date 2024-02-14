@@ -2002,4 +2002,286 @@ fun Context.startActivity(cls: Class<out Activity>, extras: Bundle) =
 fun Context.startService(cls: Class<out Service>, extras: Bundle) =
     startService(Intent(this, cls).putExtras(extras))
 
+/**
+ * `true` if USB-Debugging is enabled on the device.
+ */
+@CheckResult
+fun Context.isAdbEnabled(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        getGlobalIntOrNull(Settings.Global.ADB_ENABLED) == 1
+    } else {
+        @Suppress("DEPRECATION")
+        getSystemIntOrNull(Settings.System.ADB_ENABLED) == 1
+    }
+}
+
+/**
+ * `true` if airplane mode is enabled on the device.
+ */
+@CheckResult
+fun Context.isAirplaneModeEnabled(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        getGlobalIntOrNull(Settings.Global.AIRPLANE_MODE_ON) == 1
+    } else {
+        @Suppress("DEPRECATION")
+        getSystemIntOrNull(Settings.System.AIRPLANE_MODE_ON) == 1
+    }
+}
+
+/**
+ * `true` if "Always finish activities" is enabled on the device.
+ * This means that the the activity manager will aggressively finish activities and processes
+ * as soon as they are no longer needed.
+ * It is a common source of weird behavior when users enable this option
+ * without knowing what it actually does.
+ */
+@CheckResult
+fun Context.isAlwaysFinishActivities(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        getGlobalIntOrNull(Settings.Global.ALWAYS_FINISH_ACTIVITIES) == 1
+    } else {
+        @Suppress("DEPRECATION")
+        getSystemIntOrNull(Settings.System.ALWAYS_FINISH_ACTIVITIES) == 1
+    }
+}
+
+/**
+ * `true` if bluetooth is enabled on the device.
+ */
+@CheckResult
+fun Context.isBluetoothEnabled(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        getGlobalIntOrNull(Settings.Global.BLUETOOTH_ON) == 1
+    } else {
+        @Suppress("DEPRECATION")
+        getSystemIntOrNull(Settings.System.BLUETOOTH_ON) == 1
+    }
+}
+
+/**
+ * `true` if data roaming is enabled on the device.
+ */
+@CheckResult
+fun Context.isDataRoamingEnabled(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        getGlobalIntOrNull(Settings.Global.DATA_ROAMING) == 1
+    } else {
+        @Suppress("DEPRECATION")
+        getSystemIntOrNull(Settings.System.DATA_ROAMING) == 1
+    }
+}
+
+/**
+ * `true` if the developer options are enabled on the device.
+ */
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+@CheckResult
+fun Context.isDeveloperOptionsEnabled(): Boolean =
+    getGlobalIntOrNull(Settings.Global.DEVELOPMENT_SETTINGS_ENABLED) == 1
+
+/**
+ * The name of the device
+ */
+@CheckResult
+@RequiresApi(Build.VERSION_CODES.N_MR1)
+fun Context.deviceName(): String? = getGlobalStringOrNull(Settings.Global.DEVICE_NAME)
+
+/**
+ * `true` if mobile data is enabled on the device.
+ */
+@CheckResult
+fun Context.isMobileDataEnabled(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        getGlobalIntOrNull("mobile_data") == 1
+    } else {
+        getSystemIntOrNull("mobile_data") == 1
+    }
+}
+
+/**
+ * `true` if wifi is enabled on the device.
+ */
+@CheckResult
+fun Context.isWifiEnabled(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        getGlobalIntOrNull(Settings.Global.WIFI_ON) == 1
+    } else {
+        @Suppress("DEPRECATION")
+        getSystemIntOrNull(Settings.System.WIFI_ON) == 1
+    }
+}
+
+/**
+ * `true` if accessibility is enabled.
+ */
+@CheckResult
+fun Context.isAccessibilityEnabled() =
+    getSecureIntOrNull(Settings.Secure.ACCESSIBILITY_ENABLED) == 1
+
+/**
+ * The current screen brightness between 0 and 255.
+ */
+//    @get:CheckResult
+//    inline val screenBrightness get() = getSystemIntOrNull(Settings.System.SCREEN_BRIGHTNESS)
+
+/**
+ * Retrieve an integer settings value from [Settings.Global].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not an integer.
+ */
+@CheckResult
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+fun Context.getGlobalIntOrNull(name: String): Int? {
+    return try {
+        Settings.Global.getInt(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a long settings value from [Settings.Global].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not a long.
+ */
+@CheckResult
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+fun Context.getGlobalLongOrNull(name: String): Long? {
+    return try {
+        Settings.Global.getLong(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a float settings value from [Settings.Global].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not a float.
+ */
+@CheckResult
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+fun Context.getGlobalFloatOrNull(name: String): Float? {
+    return try {
+        Settings.Global.getFloat(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a settings value from [Settings.Global].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found.
+ */
+@CheckResult
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+fun Context.getGlobalStringOrNull(name: String): String? {
+    return Settings.Global.getString(contentResolver, name)
+}
+
+/**
+ * Retrieve an integer settings value from [Settings.System].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not an integer.
+ */
+@CheckResult
+fun Context.getSystemIntOrNull(name: String): Int? {
+    return try {
+        Settings.System.getInt(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a long settings value from [Settings.System].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not a long.
+ */
+@CheckResult
+fun Context.getSystemLongOrNull(name: String): Long? {
+    return try {
+        Settings.System.getLong(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a float settings value from [Settings.System].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not a float.
+ */
+@CheckResult
+fun Context.getSystemFloatOrNull(name: String): Float? {
+    return try {
+        Settings.System.getFloat(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a settings value from [Settings.System].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found.
+ */
+@CheckResult
+fun Context.getSystemStringOrNull(name: String): String? {
+    return Settings.System.getString(contentResolver, name)
+}
+
+/**
+ * Retrieve an integer settings value from [Settings.Secure].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not an integer.
+ */
+@CheckResult
+fun Context.getSecureIntOrNull(name: String): Int? {
+    return try {
+        Settings.Secure.getInt(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a long settings value from [Settings.Secure].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not a long.
+ */
+@CheckResult
+fun Context.getSecureLongOrNull(name: String): Long? {
+    return try {
+        Settings.Secure.getLong(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a float settings value from [Settings.Secure].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found or the value is not a float.
+ */
+@CheckResult
+fun Context.getSecureFloatOrNull(name: String): Float? {
+    return try {
+        Settings.Secure.getFloat(contentResolver, name)
+    } catch (_: Throwable) {
+        null
+    }
+}
+
+/**
+ * Retrieve a settings value from [Settings.Secure].
+ * @param name The name of the setting.
+ * @return The value of the setting. `null` if the setting was not found.
+ */
+@CheckResult
+fun Context.getSecureStringOrNull(name: String): String {
+    return Settings.Secure.getString(contentResolver, name)
+}
+
 

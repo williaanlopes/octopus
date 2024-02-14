@@ -28,7 +28,7 @@ fun Fragment.setupLocation(context: Context, config: Config = Config()) {
     }
 }
 
-fun AppCompatActivity.setupLocation(context: Context) {
+fun AppCompatActivity.setupLocation() {
     startKoin {
         androidLogger()
         androidContext(applicationContext)
