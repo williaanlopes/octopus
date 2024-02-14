@@ -1,20 +1,30 @@
 package com.gurpster.octopus.extensions
 
+import android.graphics.Color
 import android.location.Location
 import android.net.Uri
+import android.os.Build
+import android.text.Html
 import android.text.Spanned
+import android.util.Base64.DEFAULT
 import android.util.Base64.NO_WRAP
+import android.util.Base64.decode
 import android.util.Base64.encode
 import android.util.Patterns
 import android.webkit.URLUtil
+import androidx.annotation.CheckResult
 import androidx.core.text.HtmlCompat
 import com.gurpster.octopus.DATE_FORMAT
 import java.io.*
+import java.net.URLDecoder
+import java.net.URLEncoder
 import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 import kotlin.text.Charsets.UTF_8
 
@@ -139,7 +149,7 @@ fun String.toPriceAmount(): String {
  * @return Date as String
  */
 @Throws(ParseException::class)
-fun String.toDate(format: String): Date? {
+fun String.toDate(format: String = "yyyy/MM/dd hh:mm"): Date? {
     val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
     try {
         return dateFormatter.parse(this)
@@ -280,3 +290,339 @@ fun String.decodeBytes(str: String): ByteArray {
     }
     return bytes
 }
+
+/**
+ * Check if the receiver is a valid filename on Android and Linux systems using ext2/ext3/ext4 or F2FS.
+ * More precisely, this method checks if the receiver is not empty,
+ * does not contain a reserved character ('/' or 'NUL') and is not larger than 255 bytes (UTF-8).
+ * @return True if the name is valid, false otherwise.
+ */
+@CheckResult
+fun String.isValidFileName(): Boolean {
+    return this != "" && !contains('/') && !contains('\u0000') && encodeToByteArray().size <= 255
+}
+
+/**
+ * Interprets the receiver as HTML string and returns displayable styled text.
+ * @param imageGetter Any <img> tags in the HTML will use this [Html.ImageGetter]
+ * to request a representation of the image.
+ * @param tagHandler To handle unknown tags.
+ * @param legacy `true` to use [Html.FROM_HTML_MODE_LEGACY] instead of [Html.FROM_HTML_MODE_COMPACT]
+ * starting from [Build.VERSION_CODES.N]. On older versions [Html.FROM_HTML_MODE_LEGACY] is always used.
+ * @return The displayable styled text.
+ */
+@CheckResult
+fun String.toHtml(
+    imageGetter: Html.ImageGetter? = null,
+    tagHandler: Html.TagHandler? = null,
+    legacy: Boolean = false,
+): Spanned {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        Html.fromHtml(
+            this,
+            if (legacy) Html.FROM_HTML_MODE_LEGACY else Html.FROM_HTML_MODE_COMPACT,
+            imageGetter,
+            tagHandler
+        )
+    } else {
+        @Suppress("DEPRECATION")
+        Html.fromHtml(this, imageGetter, tagHandler)
+    }
+}
+
+/**
+ * @return A new [StringBuilder] with the current CharSequence.
+ */
+fun CharSequence.toStringBuilder() = StringBuilder(this)
+
+/**
+ * @return A newly created string with [delimiter] added as prefix.
+ */
+fun String.addPrefix(delimiter: Char) = delimiter + this
+
+/**
+ * @return A newly created string with [delimiter] added as prefix.
+ */
+fun String.addPrefix(delimiter: String) = delimiter + this
+
+/**
+ * @return A newly created string with [delimiter] added as suffix.
+ */
+fun String.addSuffix(delimiter: Char) = this + delimiter
+
+/**
+ * @return A newly created string with [delimiter] added as suffix.
+ */
+fun String.addSuffix(delimiter: String) = this + delimiter
+
+/**
+ * @return A newly created string with [delimiter] added as suffix and prefix.
+ */
+fun String.addSurrounding(delimiter: Char) = delimiter + this + delimiter
+
+/**
+ * @return A newly created string with [delimiter] added as suffix and prefix.
+ */
+fun String.addSurrounding(delimiter: String) = delimiter + this + delimiter
+
+/**
+ * Same as [CharSequence.indexOf] but returns `null` if the [char] was not found.
+ * @param char The character to look for.
+ * @param startIndex The index (including) to start searching from.
+ * @param ignoreCase `true` to ignore character case when matching a character. By default `false`.
+ * @return The index of the first occurrence of [char] or `null` if none is found.
+ */
+fun CharSequence.indexOfOrNull(
+    char: Char,
+    startIndex: Int = 0,
+    ignoreCase: Boolean = false
+): Int? {
+    val result = indexOf(char = char, startIndex = startIndex, ignoreCase = ignoreCase)
+    return if (result == -1) null else result
+}
+
+/**
+ * Same as [CharSequence.indexOf] but returns `null` if the [string] was not found.
+ * @param string The [String] to look for.
+ * @param startIndex The index (including) to start searching from.
+ * @param ignoreCase `true` to ignore character case when matching a character. By default `false`.
+ * @return The index of the first occurrence of [string] or `null` if none is found.
+ */
+fun CharSequence.indexOfOrNull(
+    string: String,
+    startIndex: Int = 0,
+    ignoreCase: Boolean = false
+): Int? {
+    val result = indexOf(string = string, startIndex = startIndex, ignoreCase = ignoreCase)
+    return if (result == -1) null else result
+}
+
+/**
+ * Same as [CharSequence.lastIndexOf] but returns `null` if the [char] was not found.
+ * @param char The character to look for.
+ * @param startIndex The index of character to start searching at.
+ * The search proceeds backward toward the beginning of the string.
+ * @param ignoreCase `true` to ignore character case when matching a character. By default `false`.
+ * @return The index of the last occurrence of [char] or `null` if none is found.
+ */
+fun CharSequence.lastIndexOfOrNull(
+    char: Char,
+    startIndex: Int = lastIndex,
+    ignoreCase: Boolean = false
+): Int? {
+    val result = lastIndexOf(char = char, startIndex = startIndex, ignoreCase = ignoreCase)
+    return if (result == -1) null else result
+}
+
+/**
+ * Same as [CharSequence.lastIndexOf] but returns `null` if the [string] was not found.
+ * @param string The [String] to look for.
+ * @param startIndex The index of character to start searching at.
+ * The search proceeds backward toward the beginning of the string.
+ * @param ignoreCase `true` to ignore character case when matching a character. By default `false`.
+ * @return The index of the last occurrence of [string] or `null` if none is found.
+ */
+fun CharSequence.lastIndexOfOrNull(
+    string: String,
+    startIndex: Int = lastIndex,
+    ignoreCase: Boolean = false
+): Int? {
+    val result = lastIndexOf(string = string, startIndex = startIndex, ignoreCase = ignoreCase)
+    return if (result == -1) null else result
+}
+
+/**
+ * @return `true` if this char sequence contains no characters or only whitespace characters.
+ */
+fun CharSequence.isEmptyOrBlank(): Boolean {
+    return isEmpty() || isBlank()
+}
+
+/**
+ * @return `true` if this char sequence contains characters other than whitespace characters.
+ */
+fun CharSequence.isNotEmptyOrBlank(): Boolean {
+    return !isEmptyOrBlank()
+}
+
+fun String.Companion.empty() = ""
+
+/**
+ * url validation
+ */
+fun String.isUrl(): Boolean {
+    return URLUtil.isValidUrl(this)
+}
+
+/**
+ * phone number validation
+ */
+fun String.isPhoneNumber(): Boolean {
+    return android.util.Patterns.PHONE.matcher(this).matches()
+}
+
+
+/**
+ * hex to RGB converter
+ */
+fun String.hextoRGB(): Triple<String, String, String> {
+    var name = this
+    if (!name.startsWith("#")) {
+        name = "#$this"
+    }
+    val color = Color.parseColor(name)
+    val red = Color.red(color)
+    val green = Color.green(color)
+    val blue = Color.blue(color)
+
+    return Triple(red.toString(), green.toString(), blue.toString())
+}
+
+fun <T : CharSequence> T?.safe(default: T = "" as T): T = this ?: default
+
+fun CharSequence?.isNotNullOrEmpty() = !isNullOrEmpty()
+
+fun CharSequence?.isNotNullOrBlank() = !isNullOrBlank()
+
+/**
+ * Returns a new File Object with the Current String as Its path
+ */
+fun String.toFile() = File(this)
+
+/**
+ * Encode String to URL
+ */
+fun String.encodeToUrl(charSet: String = "UTF-8"): String = URLEncoder.encode(this, charSet)
+
+/**
+ * Decode String to URL
+ */
+fun String.decodeToUrl(charSet: String = "UTF-8"): String = URLDecoder.decode(this, charSet)
+
+/**
+ * Converts the String to Title Case
+ */
+fun String.toTitleCase(): String {
+    return substring(0, 1).uppercase() + substring(1).lowercase()
+}
+
+/**
+ * Converts the String to Camel Case
+ */
+fun String.toCamelCase(): String {
+    if (length == 0)
+        return this
+    val parts = trim().split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    var camelCaseString = ""
+    for (part in parts) camelCaseString = camelCaseString + part.toTitleCase() + " "
+    return camelCaseString
+}
+
+/**
+ * Split String into Multiple SubStrings Based on the Value of [maxLength]
+ */
+fun String.splitSubStrings(maxLength: Int): Array<String> {
+    val ret = ArrayList<String>()
+    var start = 0
+    while (start < length) {
+        ret.add(substring(start, Math.min(length, start + maxLength)))
+        start += maxLength
+    }
+    return ret.toTypedArray()
+}
+
+/**
+ * Encrypt String to AES with the specific Key
+ */
+fun String.encryptAES(key: String): String {
+    var crypted: ByteArray? = null
+    try {
+        val skey = SecretKeySpec(key.toByteArray(), "AES")
+        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+        cipher.init(Cipher.ENCRYPT_MODE, skey)
+        crypted = cipher.doFinal(toByteArray())
+    } catch (e: Exception) {
+        println(e.toString())
+    }
+    return String(encode(crypted, DEFAULT))
+}
+
+/**
+ * Decrypt String to AES with the specific Key
+ */
+fun String.decryptAES(key: String): String {
+    var output: ByteArray? = null
+    try {
+        val skey = SecretKeySpec(key.toByteArray(), "AES")
+        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+        cipher.init(Cipher.DECRYPT_MODE, skey)
+        output = cipher.doFinal(decode(this, DEFAULT))
+    } catch (e: Exception) {
+        println(e.toString())
+    }
+    return output?.let { String(it) } ?: ""
+}
+
+/**
+ * encode The String to Binary
+ */
+fun String.encodeToBinary(): String {
+    val stringBuilder = StringBuilder()
+    toCharArray().forEach {
+        stringBuilder.append(Integer.toBinaryString(it.toInt()))
+        stringBuilder.append(" ")
+    }
+    return stringBuilder.toString()
+}
+
+/**
+ * Decode the String from binary
+ */
+fun String.deCodeToBinary(): String {
+    val stringBuilder = StringBuilder()
+    split(" ").forEach {
+        stringBuilder.append(Integer.parseInt(it.replace(" ", ""), 2))
+    }
+    return stringBuilder.toString()
+}
+
+/**
+ * Save String to a Given File
+ */
+fun String.saveToFile(file: File) = FileOutputStream(file).bufferedWriter().use {
+    it.write(this)
+    it.flush()
+    it.close()
+}
+
+// Private Method Below....
+private fun encrypt(string: String?, type: String): String {
+    val bytes = MessageDigest.getInstance(type).digest(string!!.toByteArray())
+    return bytes2Hex(bytes)
+}
+
+internal fun bytes2Hex(bts: ByteArray): String {
+    var des = ""
+    var tmp: String
+    for (i in bts.indices) {
+        tmp = Integer.toHexString(bts[i].toInt() and 0xFF)
+        if (tmp.length == 1) {
+            des += "0"
+        }
+        des += tmp
+    }
+    return des
+}
+
+fun String.safeBoolean(default: Boolean = false) = try {
+    toBoolean()
+} catch (e: Exception) {
+    default
+}
+
+fun String.safeByte(default: Byte = 0) = toByteOrNull().safe(default)
+fun String.safeShort(default: Short = 0) = toShortOrNull().safe(default)
+fun String.safeInt(default: Int = 0) = toIntOrNull().safe(default)
+fun String.safeLong(default: Long = 0L) = toLongOrNull().safe(default)
+fun String.safeFloat(default: Float = 0f) = toFloatOrNull().safe(default)
+fun String.safeDouble(default: Double = 0.0) = toDoubleOrNull().safe(default)

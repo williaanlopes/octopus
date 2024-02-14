@@ -1,13 +1,16 @@
 package com.gurpster.octopus.extensions
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -93,3 +96,29 @@ fun Fragment.openApp(packageName: String, shouldInstall: Boolean = false) {
         installApp(packageName)
     }
 }
+
+inline fun Fragment.supplyContext(block: Activity.() -> Unit) {
+    activity?.run { block(this) }
+}
+
+
+fun Fragment.finish() {
+    supplyContext { finish() }
+}
+
+/**
+ *  Fragment related
+ *
+ * val firstName by getValue<String>("firstName") // String?
+ * val lastName by getValueNonNull<String>("lastName") // String
+ */
+inline fun <reified T : Any> Fragment.getValue(lable: String, defaultvalue: T? = null) = lazy {
+    val value = arguments?.get(lable)
+    if (value is T) value else defaultvalue
+}
+
+inline fun <reified T : Any> Fragment.getValueNonNull(lable: String, defaultvalue: T? = null) =
+    lazy {
+        val value = arguments?.get(lable)
+        requireNotNull(if (value is T) value else defaultvalue) { lable }
+    }

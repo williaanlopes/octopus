@@ -22,7 +22,10 @@ import kotlin.reflect.KProperty
  * Thanks to Gabor Varadi for his article
  * https://link.medium.com/TvisGhIS1ab
  */
-inline fun <reified T : ViewBinding> Fragment.viewBinding() = FragmentViewBindingDelegate(T::class.java, this)
+inline fun <reified T : ViewBinding> Fragment.viewBinding() = FragmentViewBindingDelegate(
+    T::class.java,
+    this
+)
 
 class FragmentViewBindingDelegate<T : ViewBinding>(
     bindingClass: Class<T>,

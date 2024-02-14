@@ -65,9 +65,11 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
 
         val crypto = Crypto("RSA/ECB/PKCS1Padding", encryptionBlockSize, decryptionBlockSize)
 
-//        val text = "Sample text"
-//        val encryptedData = crypto.encrypt(text, key, false)
-//        val decryptedData = crypto.decrypt(encryptedData, key, false)
+        val text = "Sample text"
+        val encryptedData = crypto.encrypt(text, p, false)
+        Log.d("encryptedData", "$encryptedData")
+        val decryptedData = crypto.decrypt(encryptedData, k, false)
+        Log.d("decryptedData", "$decryptedData")
 
         Log.d("deviceId", "$keyProps")
 

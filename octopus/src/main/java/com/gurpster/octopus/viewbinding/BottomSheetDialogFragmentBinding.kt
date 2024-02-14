@@ -18,8 +18,9 @@ import kotlin.reflect.KProperty
  */
 inline fun <reified T : ViewBinding> BottomSheetDialogFragment.viewBinding() = BottomSheetViewBindingDelegate(T::class.java)
 
-class BottomSheetViewBindingDelegate<T : ViewBinding>(private val bindingClass: Class<T>) :
-    ReadOnlyProperty<BottomSheetDialogFragment, T> {
+class BottomSheetViewBindingDelegate<T : ViewBinding>(
+    private val bindingClass: Class<T>
+) : ReadOnlyProperty<BottomSheetDialogFragment, T> {
     /**
      * initiate variable for binding view
      */

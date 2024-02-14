@@ -1,6 +1,7 @@
 package com.gurpster.octopus.extensions
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.gurpster.octopus.reflections.findClass
@@ -21,4 +22,24 @@ fun <V : ViewBinding> ViewGroup.viewBindings(
     container: ViewGroup?
 ): V {
     return findClass().getBinding(inflater, container)
+}
+
+/**
+ * check if ViewGroup have the given View as Its Child
+ */
+fun ViewGroup.contains(child: View) = indexOfChild(child) > -1
+
+/**
+ * get All the Children's as Iterator
+ */
+fun ViewGroup.childs() = object : Iterator<View> {
+    var index = 0
+    override fun hasNext(): Boolean {
+        return index < childCount
+    }
+
+    override fun next(): View {
+        return getChildAt(index++)
+    }
+
 }

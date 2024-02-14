@@ -16,3 +16,4 @@ rootProject.name = "Sample"
 include ':app'
 include ':octopus'
 include ':database'
+include ':location'

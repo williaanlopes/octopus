@@ -17,8 +17,9 @@ import kotlin.reflect.KProperty
  */
 inline fun <reified T : ViewBinding> DialogFragment.viewBinding() = DialogFragmentViewBindingDelegate(T::class.java)
 
-class DialogFragmentViewBindingDelegate<T : ViewBinding>(private val bindingClass: Class<T>) :
-    ReadOnlyProperty<DialogFragment, T> {
+class DialogFragmentViewBindingDelegate<T : ViewBinding>(
+    private val bindingClass: Class<T>
+) : ReadOnlyProperty<DialogFragment, T> {
     /**
      * initiate variable for binding view
      */
