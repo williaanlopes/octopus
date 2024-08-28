@@ -11,5 +11,7 @@ allprojects {
 ```
 dependencies {
     implementation 'com.github.williaanlopes:octopus:latest'
+    implementation 'com.github.williaanlopes:location:latest'
+    implementation 'com.github.williaanlopes:database:latest'
 }
 ```

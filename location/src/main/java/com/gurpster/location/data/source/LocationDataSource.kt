@@ -2,7 +2,9 @@ package com.gurpster.location.data.source
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Looper
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -19,7 +21,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 private const val LOCATION_REQUEST_INTERVAL = 10000L
 private const val LOCATION_REQUEST_FASTEST_INTERVAL = 5000L
 
-class LocationDataSource(context: Context, configuration: Config) {
+class LocationDataSource(val context: Context, configuration: Config) {
 
     private val locationSubject = PublishSubject.create<LocationEntity>()
     private val addressSubject = PublishSubject.create<AddressEntity>()
@@ -73,7 +75,39 @@ class LocationDataSource(context: Context, configuration: Config) {
         addressSubject.toFlowable(BackpressureStrategy.MISSING)
             .doOnSubscribe { reverseGeocode() }
 
+    @SuppressLint("CheckResult")
     private fun reverseGeocode() {
-//        locationSubject.map { it.toDomain() }
+//        locationSubject.toMap { location ->
+//            Geocoder(context, Locale.getDefault())
+//                .getAddress(location.latitude, location.longitude) { address: Address? ->
+//                    if (address != null) {
+//                        locationSubject.onNext(
+//                            LocationEntity(
+//                                location.latitude,
+//                                location.longitude
+//                            )
+//                        )
+//                    }
+//                }
+//        }
+    }
+}
+
+@Suppress("DEPRECATION")
+fun Geocoder.getAddress(
+    latitude: Double,
+    longitude: Double,
+    address: (android.location.Address?) -> Unit
+) {
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getFromLocation(latitude, longitude, 1) { address(it.firstOrNull()) }
+        return
+    }
+
+    try {
+        address(getFromLocation(latitude, longitude, 1)?.firstOrNull())
+    } catch (e: Exception) {
+        address(null)
     }
 }
