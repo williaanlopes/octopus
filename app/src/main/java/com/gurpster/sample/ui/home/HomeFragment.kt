@@ -10,7 +10,7 @@ import com.yakivmospan.scytale.Crypto
 import com.yakivmospan.scytale.KeyProps
 import com.yakivmospan.scytale.Store
 import java.math.BigInteger
-import java.util.*
+import java.util.Calendar
 import javax.security.auth.x500.X500Principal
 
 
@@ -18,6 +18,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         val deviceInfo = DeviceInfo()
         Log.d("deviceInfo", deviceInfo.toString())

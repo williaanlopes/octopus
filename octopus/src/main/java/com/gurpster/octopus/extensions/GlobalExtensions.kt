@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.Calendar
 import java.util.Date
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -248,7 +249,8 @@ fun <T> async(param: T, runnable: T.() -> Unit) =
 /**
  * Want to run some code on another thread?
  *
- * run it with the ease of asyncAwait [asyncRunnable] and leave it to be executed on a Worker Thread. [awaitRunnable] wil be invoked after the asyncRunnable with the result returned from [asyncRunnable]
+ * run it with the ease of asyncAwait [asyncRunnable] and leave it to be executed on a Worker Thread.
+ * [awaitRunnable] wil be invoked after the asyncRunnable with the result returned from [asyncRunnable]
  * Make sure you don't do some context related stuff in [asyncRunnable], It may cause an memory leak
  */
 @OptIn(DelicateCoroutinesApi::class)
@@ -401,3 +403,62 @@ fun <T> T?.isNotNull() = this != null
 
 fun <T> T?.ifNotNull(toBoolean: T.() -> Boolean) =
     if (this != null) toBoolean() else false
+
+/**
+ * Get weeks for current month and year
+ *
+ * @return list of week days
+ */
+fun getWeeks(): List<String> = getWeeks(null, null)
+
+/**
+ * Get weeks for month and year
+ *
+ * @param month
+ * @param year
+ * @return list of week days
+ */
+fun getWeeks(month: Int?, year: Int?): List<String> {
+    val cal = Calendar.getInstance()
+
+    val currentMonth = if (month == null) {
+        cal[Calendar.MONTH]
+    } else {
+        cal.set(Calendar.MONTH, month)
+        cal[Calendar.MONTH]
+    }
+
+    val currentYear = if (year == null) {
+        cal[Calendar.YEAR]
+    } else {
+        cal.set(Calendar.YEAR, year)
+        cal[Calendar.YEAR]
+    }
+
+    cal[Calendar.DAY_OF_MONTH] = 1
+
+    val weekRanges: MutableList<String> = ArrayList()
+
+    while (cal[Calendar.MONTH] == currentMonth) {
+        val year = cal[Calendar.YEAR]
+        val week = cal[Calendar.WEEK_OF_MONTH]
+        val dayOfWeek = cal[Calendar.DAY_OF_WEEK]
+
+        // Only consider days in the current month
+        if (cal[Calendar.MONTH] == currentMonth && cal[Calendar.YEAR] == currentYear) {
+            val startDay = cal[Calendar.DAY_OF_MONTH]
+            var endDay = startDay + (7 - dayOfWeek)
+
+            if (endDay > cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+                endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+            }
+
+            weekRanges.add(String.format("%d-%d", startDay, endDay))
+        }
+
+        cal.add(Calendar.DAY_OF_MONTH, 7 - dayOfWeek + 1)
+    }
+
+    println(weekRanges)
+    return weekRanges
+}

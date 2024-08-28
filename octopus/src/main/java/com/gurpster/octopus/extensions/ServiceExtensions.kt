@@ -2,6 +2,7 @@ package com.gurpster.octopus.extensions
 
 import android.app.Service
 import android.os.Build
+import android.widget.Toast
 
 /**
  * Compatibility method for [Service.stopForeground]. On versions below [Build.VERSION_CODES.N]
@@ -47,3 +48,12 @@ fun Service.stopForegroundAndDetachNotification() {
     // noinspection InlinedApi
     stopForegroundCompat(notificationBehavior = Service.STOP_FOREGROUND_DETACH)
 }
+
+fun Service.shortToast(text: String) =
+    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
+fun Service.longToast(text: String) =
+    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
+fun Service.toast(text: String, length: Int) =
+    Toast.makeText(this, text, length).show()

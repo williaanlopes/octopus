@@ -7,6 +7,14 @@ import androidx.viewbinding.ViewBinding
 import com.gurpster.octopus.reflections.findClass
 import com.gurpster.octopus.reflections.getBinding
 
+/**
+ * To binding
+ *
+ * Usage ViewHolder(parent.toBinding())
+ *
+ * @param V
+ * @return
+ */
 inline fun <reified V : ViewBinding> ViewGroup.toBinding(): V {
     return V::class.java.getMethod(
         "inflate",
