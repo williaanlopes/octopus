@@ -1,5 +1,6 @@
 package com.gurpster.octopus.extensions
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.location.Location
 import android.net.Uri
@@ -20,6 +21,8 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 import java.security.MessageDigest
 import java.text.DecimalFormat
+import java.text.Normalizer
+import java.text.Normalizer.normalize
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,6 +30,48 @@ import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 import kotlin.text.Charsets.UTF_8
+
+val String.EMPTY: String
+    get() = ""
+
+val String.SPACE: String
+    get() = " "
+
+val String.UNDERSCORE: String
+    get() = "_"
+
+val String.BACK_SLASH: String
+    get() = "\\"
+
+val String.SLASH: String
+    get() = "/"
+
+val String.PIPE: String
+    get() = "|"
+
+val String.Companion.DATE_FORMAT_DATABASE: String
+    get() = "yyyy-MM-dd HH:mm:ss"
+
+val String.Companion.YYYY_MM_DD_FORMAT: String
+    get() = "yyyy-MM-dd"
+
+val String.Companion.YYYY_MM_FORMAT: String
+    get() = "yyyy-MM"
+
+val String.Companion.MM_DD_FORMAT: String
+    get() = "MM-dd"
+
+val String.Companion.YYYY_FORMAT: String
+    get() = "yyyy"
+
+val String.Companion.HH_MM_SS_FORMAT: String
+    get() = "HH:mm:ss"
+
+val String.Companion.HH_MM_FORMAT: String
+    get() = "HH:mm"
+
+val String.Companion.HH_FORMAT: String
+    get() = "HH"
 
 @Throws(IOException::class)
 fun String.serialize(): String {
@@ -116,9 +161,6 @@ fun String.Companion.randomUUID(): String = UUID.randomUUID().toString()
 //
 //    return phoneNumberKit.format(number, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
 //}
-
-val String.Companion.DATE_FORMAT_DATABASE: String
-    get() = "yyyy-MM-dd HH:mm:ss"
 
 /**
  * Remove white spaces
@@ -465,7 +507,7 @@ fun String.isPhoneNumber(): Boolean {
 /**
  * hex to RGB converter
  */
-fun String.hextoRGB(): Triple<String, String, String> {
+fun String.hexToRGB(): Triple<String, String, String> {
     var name = this
     if (!name.startsWith("#")) {
         name = "#$this"
@@ -534,6 +576,7 @@ fun String.splitSubStrings(maxLength: Int): Array<String> {
 /**
  * Encrypt String to AES with the specific Key
  */
+@SuppressLint("GetInstance")
 fun String.encryptAES(key: String): String {
     var crypted: ByteArray? = null
     try {
@@ -550,6 +593,7 @@ fun String.encryptAES(key: String): String {
 /**
  * Decrypt String to AES with the specific Key
  */
+@SuppressLint("GetInstance")
 fun String.decryptAES(key: String): String {
     var output: ByteArray? = null
     try {
@@ -569,7 +613,7 @@ fun String.decryptAES(key: String): String {
 fun String.encodeToBinary(): String {
     val stringBuilder = StringBuilder()
     toCharArray().forEach {
-        stringBuilder.append(Integer.toBinaryString(it.toInt()))
+        stringBuilder.append(Integer.toBinaryString(it.code))
         stringBuilder.append(" ")
     }
     return stringBuilder.toString()
@@ -595,11 +639,38 @@ fun String.saveToFile(file: File) = FileOutputStream(file).bufferedWriter().use 
     it.close()
 }
 
-// Private Method Below....
-private fun encrypt(string: String?, type: String): String {
-    val bytes = MessageDigest.getInstance(type).digest(string!!.toByteArray())
-    return bytes2Hex(bytes)
+fun String.safeBoolean(default: Boolean = false) = try {
+    toBoolean()
+} catch (e: Exception) {
+    default
 }
+
+fun String.safeByte(default: Byte = 0) = toByteOrNull().safe(default)
+
+fun String.safeShort(default: Short = 0) = toShortOrNull().safe(default)
+
+fun String.safeInt(default: Int = 0) = toIntOrNull().safe(default)
+
+fun String.safeLong(default: Long = 0L) = toLongOrNull().safe(default)
+
+fun String.safeFloat(default: Float = 0f) = toFloatOrNull().safe(default)
+
+/**
+ *
+ * @return String some text; Other text as Enum format SOME_TEXT; OTHER_TEXT.
+ */
+fun String.safeDouble(default: Double = 0.0) = toDoubleOrNull().safe(default)
+
+/**
+ * Convert String to enum formatter
+ * @return String formated as ENUM.
+ */
+fun String.toEnum() = Regex("\\p{InCOMBINING_DIACRITICAL_MARKS}+")
+    .replace(normalize(trim(), Normalizer.Form.NFD), EMPTY)
+    .replace(SPACE, UNDERSCORE)
+    .uppercase()
+
+// =========== only internal fun =================
 
 internal fun bytes2Hex(bts: ByteArray): String {
     var des = ""
@@ -614,15 +685,8 @@ internal fun bytes2Hex(bts: ByteArray): String {
     return des
 }
 
-fun String.safeBoolean(default: Boolean = false) = try {
-    toBoolean()
-} catch (e: Exception) {
-    default
+// Private Method Below....
+private fun encrypt(string: String?, type: String): String {
+    val bytes = MessageDigest.getInstance(type).digest(string!!.toByteArray())
+    return bytes2Hex(bytes)
 }
-
-fun String.safeByte(default: Byte = 0) = toByteOrNull().safe(default)
-fun String.safeShort(default: Short = 0) = toShortOrNull().safe(default)
-fun String.safeInt(default: Int = 0) = toIntOrNull().safe(default)
-fun String.safeLong(default: Long = 0L) = toLongOrNull().safe(default)
-fun String.safeFloat(default: Float = 0f) = toFloatOrNull().safe(default)
-fun String.safeDouble(default: Double = 0.0) = toDoubleOrNull().safe(default)
