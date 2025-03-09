@@ -8,6 +8,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.gurpster.octopus.helpers.TextViewHelper
 
+fun TextView?.orEmpty() = this?.text ?: ""
+
 fun TextView.asyncText(text: CharSequence, textSize: Int = text.length) {
     async(this, text, textSize)
 }

@@ -51,7 +51,7 @@ fun Resources.getColorCompatOrNull(@ColorRes id: Int?, theme: Resources.Theme? =
  * @experimental Consider using [Resources.getColorStateListCompatOrNull].
  */
 @Throws(Resources.NotFoundException::class)
-inline fun Resources.getColorStateListCompat(
+fun Resources.getColorStateListCompat(
     @ColorRes id: Int,
     theme: Resources.Theme? = null
 ): ColorStateList? {

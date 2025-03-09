@@ -2,6 +2,8 @@ package com.gurpster.octopus.extensions
 
 import android.content.res.Resources
 
+fun Float?.orZero() = this ?: 0
+
 fun Float?.toBoolean() = this != null && this >= 1
 
 fun Float?.isTrue() = this != null && this >= 1
@@ -72,8 +74,8 @@ fun Float?.isNullOrPositive() = this == null || this > 0f
  */
 fun Float?.isNullOrZero() = this == null || this == 0f
 
-val Float.Companion.SIZE_BYTES: Int
-    get() = 4
+//val Float.Companion.SIZE_BYTES: Int
+//    get() = 4
 
 fun Float?.safe(default: Float = 0f): Float = this ?: default
 

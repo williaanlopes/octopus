@@ -1,5 +1,7 @@
 package com.gurpster.octopus.extensions
 
+fun <T> Collection<T>?.orEmpty(): Collection<T> = this ?: emptyList()
+
 val <T> Collection<T>.lastIndex: Int
     get() = size - 1
 

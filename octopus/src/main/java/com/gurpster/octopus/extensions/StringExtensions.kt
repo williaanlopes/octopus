@@ -16,7 +16,13 @@ import android.webkit.URLUtil
 import androidx.annotation.CheckResult
 import androidx.core.text.HtmlCompat
 import com.gurpster.octopus.DATE_FORMAT
-import java.io.*
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.security.MessageDigest
@@ -25,7 +31,10 @@ import java.text.Normalizer
 import java.text.Normalizer.normalize
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+import java.util.UUID
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
@@ -660,6 +669,8 @@ fun String.safeFloat(default: Float = 0f) = toFloatOrNull().safe(default)
  * @return String some text; Other text as Enum format SOME_TEXT; OTHER_TEXT.
  */
 fun String.safeDouble(default: Double = 0.0) = toDoubleOrNull().safe(default)
+
+fun String?.orEmpty() = this ?: ""
 
 /**
  * Convert String to enum formatter

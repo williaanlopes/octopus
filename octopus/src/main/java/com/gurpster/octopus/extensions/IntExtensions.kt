@@ -1,8 +1,9 @@
 package com.gurpster.octopus.extensions
 
 import android.content.res.Resources
-import java.lang.Math.sqrt
 import java.text.DecimalFormat
+
+fun Int?.orZero() = this ?: 0
 
 fun Int?.toBoolean() = this != null && this >= 1
 

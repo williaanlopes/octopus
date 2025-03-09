@@ -2,10 +2,13 @@ package com.gurpster.octopus.extensions
 
 import android.net.Uri
 import androidx.annotation.CheckResult
+import androidx.core.net.toUri
 import java.net.MalformedURLException
 import java.net.URI
 import java.net.URISyntaxException
 import java.net.URL
+
+fun Uri?.orEmpty() = this ?: "".toUri()
 
 /**
  * Convert an android [Uri] to a java [URI].
@@ -65,7 +68,7 @@ fun Uri.toJavaUrlOrNull(): URL? {
  * @see URI
  */
 @CheckResult
-fun URI.toAndroidUri(): Uri = Uri.parse(toString())
+fun URI.toAndroidUri(): Uri = toString().toUri()
 
 /**
  * Convert a java [URL] to an android [Uri].
@@ -73,4 +76,4 @@ fun URI.toAndroidUri(): Uri = Uri.parse(toString())
  * @see URL
  */
 @CheckResult
-fun URL.toAndroidUri(): Uri = Uri.parse(toString())
+fun URL.toAndroidUri(): Uri = toString().toUri()

@@ -1,5 +1,7 @@
 package com.gurpster.octopus.extensions
 
+fun <T> Iterable<T>?.orEmpty() = this ?: mutableListOf<T>()
+
 /**
  * Same as [Iterable.indexOf] but returns `null` if the [element] does not exist in the collection.
  * @param element The element to search for.

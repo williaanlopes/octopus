@@ -12,7 +12,7 @@ import androidx.annotation.CheckResult
  * @return See description above.
  */
 @CheckResult
-inline fun Configuration.isTablet(requireXLarge: Boolean = false): Boolean {
+fun Configuration.isTablet(requireXLarge: Boolean = false): Boolean {
     return screenLayoutSize >= if (requireXLarge) {
         Configuration.SCREENLAYOUT_SIZE_XLARGE
     } else {

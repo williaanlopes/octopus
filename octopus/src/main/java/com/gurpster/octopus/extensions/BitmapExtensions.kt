@@ -20,6 +20,7 @@ import android.provider.MediaStore
 import android.util.Base64
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresPermission
+import androidx.core.graphics.createBitmap
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -234,7 +235,7 @@ fun Bitmap.toRound(borderSize: Float = 0f, borderColor: Int = 0, recycle: Boolea
     val height = height
     val size = Math.min(width, height)
     val paint = Paint(ANTI_ALIAS_FLAG)
-    val ret = Bitmap.createBitmap(width, height, config)
+    val ret = createBitmap(width, height, config!!)
     val center = size / 2f
     val rectF = RectF(0f, 0f, width.toFloat(), height.toFloat())
     rectF.inset((width - size) / 2f, (height - size) / 2f)
@@ -272,7 +273,7 @@ fun Bitmap.toRoundCorner(
     val width = width
     val height = height
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    val ret = Bitmap.createBitmap(width, height, config)
+    val ret = createBitmap(width, height, config!!)
     val shader = BitmapShader(this, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
     paint.shader = shader
     val canvas = Canvas(ret)
@@ -296,7 +297,7 @@ fun Bitmap.toRoundCorner(
  * Want the Image to GreyScale? Just call [toGrayScale] and get the grey Image.
  */
 fun Bitmap.toGrayScale(recycle: Boolean): Bitmap? {
-    val ret = Bitmap.createBitmap(width, height, config)
+    val ret = createBitmap(width, height, config!!)
     val canvas = Canvas(ret)
     val paint = Paint()
     val colorMatrix = ColorMatrix()

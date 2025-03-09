@@ -1,5 +1,9 @@
 package com.gurpster.octopus.extensions
 
+fun Boolean?.orFalse() = this ?: false
+
+fun Boolean?.orTrue() = this ?: true
+
 fun Boolean?.forceBoolean() = this == true
 
 /**

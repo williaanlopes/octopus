@@ -5,7 +5,11 @@ import com.gurpster.octopus.TIME_FORMAT
 import com.gurpster.octopus.TIME_STAMP_FORMAT
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
+fun Long?.orZero() = this ?: 0
 
 fun Long?.toBoolean() = this != null && this == 1L
 

@@ -2,12 +2,9 @@ package com.gurpster.octopus.extensions
 
 import android.os.Looper
 import android.text.TextUtils
-import android.view.View
 import android.widget.EditText
-import android.widget.SearchView
 import androidx.annotation.CheckResult
 import androidx.core.widget.doOnTextChanged
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -17,6 +14,10 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
 import timber.log.Timber
 import kotlin.coroutines.EmptyCoroutineContext
+
+fun EditText?.orEmpty() = this?.text ?: ""
+
+fun TextInputEditText?.orEmpty() = this?.text ?: ""
 
 internal fun checkMainThread() {
     check(Looper.myLooper() == Looper.getMainLooper()) {
@@ -37,12 +38,12 @@ fun TextInputEditText.getOnlyNumbers(): Int {
     return this.text.toString().trim().onlyNumbers
 }
 
-fun EditText.getText(): String {
-    return when {
-        TextUtils.isEmpty(this.text) -> ""
-        else -> return this.text.toString()
-    }
-}
+//fun EditText.getText(): String {
+//    return when {
+//        TextUtils.isEmpty(this.text) -> ""
+//        else -> return this.text.toString()
+//    }
+//}
 
 fun EditText.getTextNumbers(): Int {
     return this.text.toString().trim().onlyNumbers

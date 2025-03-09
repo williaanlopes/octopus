@@ -45,7 +45,6 @@ import android.os.Bundle
 import android.os.Process
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.provider.MediaStore
 import android.provider.Settings
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -85,7 +84,9 @@ import com.gurpster.octopus.helpers.locationManager
 import com.gurpster.octopus.helpers.notificationManager
 import com.gurpster.octopus.helpers.telephonyManager
 import java.io.File
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -198,6 +199,7 @@ fun Context.isAppInstalled(packageName: String): Boolean {
     }
 }
 
+@SuppressLint("ObsoleteSdkInt")
 fun Context.isDevMode(): Boolean {
     return when {
         Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN -> {
@@ -242,7 +244,7 @@ fun Context.directionsTo(location: Location) {
     val lng = location.longitude
     val uri = String.format(Locale.US, "http://maps.google.com/maps?daddr=%f,%f", lat, lng)
     try {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        val intent = Intent(Intent.ACTION_VIEW, uri.toUri())
         intent.setClassName(
             "com.google.android.apps.maps",
             "com.google.android.maps.MapsActivity"
@@ -251,7 +253,7 @@ fun Context.directionsTo(location: Location) {
     } catch (e: ActivityNotFoundException) {
         e.printStackTrace()
 
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        val intent = Intent(Intent.ACTION_VIEW, uri.toUri())
         startActivity(intent)
     }
 }
@@ -998,8 +1000,8 @@ fun Context.getDrawableIdByNameOrNull(name: String): Int? {
  * @param name The resource name.
  * @return The associated resource identifier. Returns `null` if no matching resource was found.
  */
-@SuppressLint("DiscouragedApi")
 @StringRes
+@SuppressLint("DiscouragedApi")
 @Discouraged(message = "See Resources.getIdentifier for details.")
 fun Context.getStringIdByNameOrNull(name: String): Int? {
     val resId = resources.getIdentifier(name, "string", packageName)
@@ -1011,8 +1013,8 @@ fun Context.getStringIdByNameOrNull(name: String): Int? {
  * @param name The resource name.
  * @return The associated resource identifier. Returns `null` if no matching resource was found.
  */
-@SuppressLint("DiscouragedApi")
 @LayoutRes
+@SuppressLint("DiscouragedApi")
 @Discouraged(message = "See Resources.getIdentifier for details.")
 fun Context.getLayoutIdByNameOrNull(name: String): Int? {
     val resId = resources.getIdentifier(name, "layout", packageName)
@@ -1413,7 +1415,7 @@ inline fun <reified T : Number> Context?.dimen(@DimenRes res: Int): T =
         }
     }
 
-@SuppressLint("UseCompatLoadingForDrawables")
+@SuppressLint("UseCompatLoadingForDrawables", "ObsoleteSdkInt")
 fun Context?.drawable(@DrawableRes res: Int): Drawable? =
     when {
         this == null -> null
@@ -1759,7 +1761,7 @@ fun Context.getAppApk(pName: String = packageName): File {
  */
 @Throws(PackageManager.NameNotFoundException::class)
 fun Context.getAppVersionName(pName: String = packageName): String {
-    return packageManager.getPackageInfo(pName, 0).versionName
+    return packageManager.getPackageInfo(pName, 0).versionName ?: ""
 }
 
 /**
@@ -2005,6 +2007,7 @@ fun Context.startService(cls: Class<out Service>, extras: Bundle) =
 /**
  * `true` if USB-Debugging is enabled on the device.
  */
+@SuppressLint("ObsoleteSdkInt")
 @CheckResult
 fun Context.isAdbEnabled(): Boolean {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -2018,6 +2021,7 @@ fun Context.isAdbEnabled(): Boolean {
 /**
  * `true` if airplane mode is enabled on the device.
  */
+@SuppressLint("ObsoleteSdkInt")
 @CheckResult
 fun Context.isAirplaneModeEnabled(): Boolean {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -2035,6 +2039,7 @@ fun Context.isAirplaneModeEnabled(): Boolean {
  * It is a common source of weird behavior when users enable this option
  * without knowing what it actually does.
  */
+@SuppressLint("ObsoleteSdkInt")
 @CheckResult
 fun Context.isAlwaysFinishActivities(): Boolean {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -2048,6 +2053,7 @@ fun Context.isAlwaysFinishActivities(): Boolean {
 /**
  * `true` if bluetooth is enabled on the device.
  */
+@SuppressLint("ObsoleteSdkInt")
 @CheckResult
 fun Context.isBluetoothEnabled(): Boolean {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -2145,6 +2151,7 @@ fun Context.getGlobalIntOrNull(name: String): Int? {
  * @return The value of the setting. `null` if the setting was not found or the value is not a long.
  */
 @CheckResult
+@SuppressLint("ObsoleteSdkInt")
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 fun Context.getGlobalLongOrNull(name: String): Long? {
     return try {
@@ -2159,6 +2166,7 @@ fun Context.getGlobalLongOrNull(name: String): Long? {
  * @param name The name of the setting.
  * @return The value of the setting. `null` if the setting was not found or the value is not a float.
  */
+@SuppressLint("ObsoleteSdkInt")
 @CheckResult
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 fun Context.getGlobalFloatOrNull(name: String): Float? {
@@ -2175,6 +2183,7 @@ fun Context.getGlobalFloatOrNull(name: String): Float? {
  * @return The value of the setting. `null` if the setting was not found.
  */
 @CheckResult
+@SuppressLint("ObsoleteSdkInt")
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 fun Context.getGlobalStringOrNull(name: String): String? {
     return Settings.Global.getString(contentResolver, name)

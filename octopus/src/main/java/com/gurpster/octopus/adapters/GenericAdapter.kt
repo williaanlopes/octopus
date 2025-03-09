@@ -12,19 +12,19 @@ import androidx.recyclerview.widget.RecyclerView
 open class GenericListAdapter<T : Any>(
     @LayoutRes val itemLayout: Int,
     @LayoutRes val itemEmpty: Int? = null,
-    inline val bind: (item: T, holder: BaseViewHolder, itemCount: Int, position: Int) -> Unit,
-    inline val bindEmpty: ((holder: BaseViewHolder) -> Unit)? = null
+    val bind: (item: T, holder: BaseViewHolder, itemCount: Int, position: Int) -> Unit,
+    val bindEmpty: ((holder: BaseViewHolder) -> Unit)? = null
 ) : ListAdapter<T, BaseViewHolder>(BaseItemCallback<T>()) {
 
     companion object {
-        private const val typeEmpty = 0
-        private const val typeData = 1
+        private const val TYPE_EMPTY = 0
+        private const val TYPE_DATA = 1
     }
 
     @CallSuper
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         with(holder) {
-            if (itemViewType == typeEmpty) bindEmpty?.let { empty -> empty(holder) }
+            if (itemViewType == TYPE_EMPTY) bindEmpty?.let { empty -> empty(holder) }
             else bind(getItem(position), holder, itemCount, position)
         }
 
@@ -42,10 +42,10 @@ open class GenericListAdapter<T : Any>(
 
     @CallSuper
     override fun getItemViewType(position: Int) =
-        if (currentList.size == 1 && currentList[position] == null) typeEmpty else typeData
+        if (currentList.size == 1 && currentList[position] == null) TYPE_EMPTY else TYPE_DATA
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        val root = if (viewType == typeData)
+        val root = if (viewType == TYPE_DATA)
             LayoutInflater.from(parent.context).inflate(itemLayout, parent, false)
         else
             itemEmpty?.let { item ->

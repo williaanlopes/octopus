@@ -2,6 +2,8 @@ package com.gurpster.octopus.extensions
 
 import java.text.DecimalFormat
 
+fun Double?.orZero() = this ?: 0
+
 fun Double?.toBoolean() = this != null && this == 1.0
 
 fun Double?.isTrue() = this != null && this >= 1.0
@@ -76,8 +78,8 @@ fun Double?.isNullOrPositive() = this == null || this > 0.0
  */
 fun Double?.isNullOrZero() = this == null || this == 0.0
 
-val Double.Companion.SIZE_BYTES: Int
-    get() = 8
+//val Double.Companion.SIZE_BYTES: Int
+//    get() = 8
 
 fun Double?.safe(default: Double = 0.toDouble()): Double = this ?: default
 

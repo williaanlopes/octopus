@@ -1,5 +1,7 @@
 package com.gurpster.octopus.extensions
 
+fun <K, V> Map<K, V>?.orEmpty() = this ?: mapOf()
+
 fun <K, V> Map<K, List<V>>.flatten(): List<Any?> =
     map { (k, v) ->
         mutableListOf<Any?>().apply {

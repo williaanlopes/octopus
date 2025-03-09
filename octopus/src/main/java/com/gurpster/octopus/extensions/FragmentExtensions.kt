@@ -3,14 +3,12 @@ package com.gurpster.octopus.extensions
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -28,7 +26,7 @@ fun <T : ViewBinding> Fragment.viewBindings() = autoCleared<T>()
 @Suppress("DEPRECATION")
 inline fun <reified T : Any> Fragment.bundleArgs(key: String, defaultValue: T? = null) = lazy {
     val value = arguments?.get(key)
-    if (value is T) value else defaultValue
+    value as? T ?: defaultValue
 }
 
 fun Fragment.navigate(directions: NavDirections) {
@@ -73,14 +71,14 @@ fun Fragment.installApp(packageName: String) {
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("market://details?id=$packageName")
+                "market://details?id=$packageName".toUri()
             )
         )
     } catch (e: ActivityNotFoundException) {
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                "https://play.google.com/store/apps/details?id=$packageName".toUri()
             )
         )
     }
@@ -112,13 +110,13 @@ fun Fragment.finish() {
  * val firstName by getValue<String>("firstName") // String?
  * val lastName by getValueNonNull<String>("lastName") // String
  */
-inline fun <reified T : Any> Fragment.getValue(lable: String, defaultvalue: T? = null) = lazy {
-    val value = arguments?.get(lable)
-    if (value is T) value else defaultvalue
+inline fun <reified T : Any> Fragment.getValue(label: String, defaultValue: T? = null) = lazy {
+    val value = arguments?.get(label)
+    value as? T ?: defaultValue
 }
 
-inline fun <reified T : Any> Fragment.getValueNonNull(lable: String, defaultvalue: T? = null) =
+inline fun <reified T : Any> Fragment.getValueNonNull(label: String, defaultValue: T? = null) =
     lazy {
-        val value = arguments?.get(lable)
-        requireNotNull(if (value is T) value else defaultvalue) { lable }
+        val value = arguments?.get(label)
+        requireNotNull(value as? T ?: defaultValue) { label }
     }

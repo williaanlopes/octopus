@@ -1,6 +1,6 @@
 package com.gurpster.octopus.extensions
 
-import android.content.res.Resources
+fun Number?.orZero() = this ?: 0
 
 fun Number?.forceLong(): Long {
     return this?.toLong() ?: 0
